@@ -3,13 +3,15 @@ import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import { User } from '@prisma/client';
+
 
 @Controller('/usuario')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) { }
 
   @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
+  async create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<User> {
     const usuarioEntity = new Usuario();
     usuarioEntity.nome = createUsuarioDto.nome;
     usuarioEntity.matricula = createUsuarioDto.matricula;
@@ -19,10 +21,10 @@ export class UsuarioController {
     return this.usuarioService.create(usuarioEntity);
   }
 
-  @Get()
-  findAll() {
-    return this.usuarioService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.usuarioService.findAll();
+  // }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
