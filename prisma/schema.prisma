@@ -16,7 +16,7 @@ datasource db {
 model Usuario {
   id    Int     @default(autoincrement()) @id
   nome  String
-  matricula String
+  matricula String @unique
   email String  @unique
   cpf String @unique
   senha String

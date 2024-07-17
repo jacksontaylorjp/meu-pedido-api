@@ -3,4 +3,5 @@ export class Usuario {
     email: string;
     matricula: string;
     cpf: string;
+    senha: string;
 }
