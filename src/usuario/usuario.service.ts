@@ -17,7 +17,8 @@ export class UsuarioService {
   }
 
   findAll() {
-    return this.prisma.usuario.findMany();
+    const res =  this.prisma.usuario.findMany();
+    return res;
   }
 
   findOne(id: number) {
@@ -27,6 +28,14 @@ export class UsuarioService {
       },
     });
   }
+
+  // findByEmail(email: string) {
+  //   return this.prisma.usuario.findUnique({
+  //     where: {
+  //       email: String(email),
+  //     },
+  //   });
+  // }
 
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     return this.prisma.usuario.update({
