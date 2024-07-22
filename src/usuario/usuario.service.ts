@@ -29,13 +29,13 @@ export class UsuarioService {
     });
   }
 
-  // findByEmail(email: string) {
-  //   return this.prisma.usuario.findUnique({
-  //     where: {
-  //       email: String(email),
-  //     },
-  //   });
-  // }
+  findByEmail(email: string) {
+    return this.prisma.usuario.findUnique({
+      where: {
+        email: String(email),
+      },
+    });
+  }
 
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     return this.prisma.usuario.update({
