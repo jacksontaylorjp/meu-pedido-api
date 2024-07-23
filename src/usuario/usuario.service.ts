@@ -29,14 +29,6 @@ export class UsuarioService {
     });
   }
 
-  findByEmail(email: string) {
-    return this.prisma.usuario.findUnique({
-      where: {
-        email: String(email),
-      },
-    });
-  }
-
   update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     return this.prisma.usuario.update({
       where: {
@@ -59,8 +51,9 @@ export class UsuarioService {
       where: { email },
     });
     if (!usuario) {
+      console.log('usuário não encontrado');
       return false;
-    }
+    }    
     return bcrypt.compare(senha, usuario.senha);
   }
 }
