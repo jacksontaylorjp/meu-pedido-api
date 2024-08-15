@@ -12,12 +12,7 @@ export class UsuarioController {
 
   @Post()
   async create(@Body() createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    const usuarioEntity = new Usuario();
-    usuarioEntity.nome = createUsuarioDto.nome;
-    usuarioEntity.matricula = createUsuarioDto.matricula;
-    usuarioEntity.email = createUsuarioDto.email;
-    usuarioEntity.cpf = createUsuarioDto.cpf;
-    usuarioEntity.senha = createUsuarioDto.senha;
+    const usuarioEntity = new Usuario(createUsuarioDto);
     return this.usuarioService.create(usuarioEntity as CreateUsuarioDto);
   }
 
