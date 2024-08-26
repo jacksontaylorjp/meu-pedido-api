@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
@@ -10,15 +10,25 @@ export class UsuarioService {
   constructor(private prisma: PrismaService) { }
 
   async create(data: CreateUsuarioDto): Promise<Usuario> {
-    const hashedSenha = await bcrypt.hash(data.senha, 10);
-    return this.prisma.usuario.create({ data:{
-      ...data, senha: hashedSenha
-    } });
+    try {
+      const hashedSenha = await bcrypt.hash(data.senha, 10);
+      const response = await this.prisma.usuario.create({
+        data: {
+          ...data,
+          senha: hashedSenha,
+        },
+      });
+      return response;
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new BadRequestException('CPF já está em uso');
+      }
+      throw error; 
+    }
   }
 
   findAll() {
-    const res =  this.prisma.usuario.findMany();
-    return res;
+    return this.prisma.usuario.findMany();
   }
 
   findOne(id: number) {
@@ -34,7 +44,7 @@ export class UsuarioService {
       where: {
         id: Number(id),
       },
-      data: updateUsuarioDto
+      data: updateUsuarioDto,
     });
   }
 
@@ -51,9 +61,9 @@ export class UsuarioService {
       where: { email },
     });
     if (!usuario) {
-      console.log('usuário não encontrado');
+      console.log('Usuário não encontrado');
       return false;
-    }    
+    }
     return bcrypt.compare(senha, usuario.senha);
   }
 }
