@@ -6,6 +6,7 @@ export class Usuario {
     matricula: string;
     cpf: string;
     senha: string;
+    
     constructor(dto: CreateUsuarioDto) {
         this.nome = dto.nome;
         this.matricula = dto.matricula;
