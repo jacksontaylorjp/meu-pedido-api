@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,7 +12,10 @@ export class PedidoService {
       const response = await this.prisma.pedido.create({ data: data });
       return response;
     } catch (error) {
-      console.error(error);
+      if (error.code === 'P2002') {
+        throw new BadRequestException("pedido já cadastrado");
+      }
+      throw error; 
     }
   }
 
@@ -20,8 +23,12 @@ export class PedidoService {
     return `This action returns all pedido`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pedido`;
+  findByData(data: string) {
+    return this.prisma.pedido.findFirst({
+      where: {
+        data: data,
+      },
+    });
   }
 
   update(id: number, updatePedidoDto: UpdatePedidoDto) {

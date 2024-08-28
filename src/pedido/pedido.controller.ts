@@ -23,9 +23,9 @@ export class PedidoController {
   }
 
   @UseGuards(AuthGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pedidoService.findOne(+id);
+  @Get(':data')
+  findOne(@Param('data') data: string) {
+    return this.pedidoService.findByData(data);
   }
 
   @UseGuards(AuthGuard)
