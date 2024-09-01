@@ -1,11 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreatePedidoDto } from './create-pedido.dto';
-import { IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class UpdatePedidoDto extends PartialType(CreatePedidoDto) {
-    @IsOptional()
-    usuarioId: number;
-    
+    @IsNotEmpty()
+    id: number;
+
     @IsOptional()
     data: Date;
 }

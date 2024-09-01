@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
@@ -7,7 +7,7 @@ import { Pedido } from './entities/pedido.entity';
 
 @Controller('/pedido')
 export class PedidoController {
-  constructor(private readonly pedidoService: PedidoService) {}
+  constructor(private readonly pedidoService: PedidoService) { }
 
   @UseGuards(AuthGuard)
   @Post()
@@ -17,20 +17,23 @@ export class PedidoController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('user/:usuarioId')
+  findAllPerUser(@Param('usuarioId') usuarioId: number) {
+    return this.pedidoService.findAllPerUser(usuarioId);
+  }
+
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.pedidoService.findAll();
+  findByData(
+    @Query('usuarioId') usuarioId: number,
+    @Query('data') data: string
+  ) {
+    return this.pedidoService.findByData({ usuarioId, data });
   }
 
   @UseGuards(AuthGuard)
-  @Get(':data')
-  findOne(@Param('data') data: string) {
-    return this.pedidoService.findByData(data);
-  }
-
-  @UseGuards(AuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidoService.update(+id, updatePedidoDto);
+  @Patch()
+  update(@Body() updatePedidoDto: UpdatePedidoDto) {
+    return this.pedidoService.update(updatePedidoDto);
   }
 }

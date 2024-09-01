@@ -15,27 +15,48 @@ export class PedidoService {
       if (error.code === 'P2002') {
         throw new BadRequestException("pedido já cadastrado");
       }
-      throw error; 
+      throw error;
     }
   }
 
-  findAll() {
-    return `This action returns all pedido`;
+  async findAllPerUser(usuarioId: number) {
+    try {
+      return await this.prisma.pedido.findMany({
+        where: {
+          usuarioId: Number(usuarioId),
+        }
+      })
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  findByData(data: string) {
-    return this.prisma.pedido.findFirst({
-      where: {
-        data: data,
-      },
-    });
+  async findByData(dados: any) {
+    const { usuarioId, data } = dados;    
+    try {
+      return await this.prisma.pedido.findFirst({
+        where: {
+          usuarioId: usuarioId,
+          data: data,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  update(id: number, updatePedidoDto: UpdatePedidoDto) {
-    return `This action updates a #${id} pedido`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} pedido`;
+  async update(updatePedidoDto: UpdatePedidoDto) {
+    const { id, status } = updatePedidoDto;
+    try {
+      return await this.prisma.pedido.update({
+        where: { id },
+        data: { status }
+      })
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new BadRequestException("pedido não existe");
+      }
+      throw error;
+    }
   }
 }
