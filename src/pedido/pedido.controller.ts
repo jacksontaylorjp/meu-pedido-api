@@ -30,10 +30,18 @@ export class PedidoController {
   ) {
     return this.pedidoService.findByData({ usuarioId, data });
   }
-
+  
   @UseGuards(AuthGuard)
   @Patch()
   update(@Body() updatePedidoDto: UpdatePedidoDto) {
     return this.pedidoService.update(updatePedidoDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/relatorio')
+  relatorioDia(
+    @Query('data') data: string
+  ){
+    return this.pedidoService.relatorioDia(data);
   }
 }

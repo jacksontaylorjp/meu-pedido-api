@@ -32,7 +32,9 @@ export class PedidoService {
   }
 
   async findByData(dados: any) {
-    const { usuarioId, data } = dados;    
+    const { usuarioId, data } = dados;
+    console.log(data);
+
     try {
       return await this.prisma.pedido.findFirst({
         where: {
@@ -57,6 +59,20 @@ export class PedidoService {
         throw new BadRequestException("pedido não existe");
       }
       throw error;
+    }
+  }
+
+  async relatorioDia(data: string) {
+    try {
+      if (data) {
+        return await this.prisma.pedido.findMany({
+          where: {
+            data: data
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 }
