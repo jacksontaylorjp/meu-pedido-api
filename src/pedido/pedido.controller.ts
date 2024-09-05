@@ -46,9 +46,6 @@ export class PedidoController {
   async relatorioDia(
     @Query('data') data: string
   ) {
-    const response = await this.pedidoService.relatorioDia(data);
-    const relatorio = await Promise.all(response.map(async (res) => await this.usuarioService.findOne(res.usuarioId)));
-    const relatorioFinal = relatorio.map(({ senha, email, id, ...dados }) => dados);
-    return relatorioFinal;
+    return await this.pedidoService.relatorioDia(data);
   }
 }

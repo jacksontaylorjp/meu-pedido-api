@@ -2,10 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Injectable()
 export class PedidoService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly usuarioService: UsuarioService
+
+  ) { }
 
   async create(data: CreatePedidoDto) {
     try {
@@ -65,11 +70,17 @@ export class PedidoService {
   async relatorioDia(data: string) {
     try {
       if (data) {
-        return await this.prisma.pedido.findMany({
+        const response = await this.prisma.pedido.findMany({
           where: {
             data: data
           }
         });
+        const relatorio = await Promise.all(
+          response
+            .filter(({ status }) => status)
+            .map(async (res) => await this.usuarioService
+              .findOne(res.usuarioId)));
+        return relatorio.map(({ senha, email, id, ...dados }) => dados);
       }
     } catch (error) {
       console.error(error);
